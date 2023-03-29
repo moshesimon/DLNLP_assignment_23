@@ -1,27 +1,45 @@
 import pandas as pd
-import tarfile
-import bson
+from config import *
+# from transformers import T5ForConditionalGeneration, T5Tokenizer
 
-# tar = tarfile.open("/scratch/zceemsi/Datasets/dump_small.tar.gz", "r:gz")
+# tokenizer = T5Tokenizer.from_pretrained("t5-small")
+# model = T5ForConditionalGeneration.from_pretrained("google/t5-v1_1-base")
 
-# tar.extractall('/scratch/zceemsi/Datasets/')
+# input_ids = tokenizer("translate English to German: The house is wonderful.", return_tensors="pt").input_ids
+# outputs = model.generate(input_ids)
+# print(tokenizer.decode(outputs[0], skip_special_tokens=True))
 
-# tar.close()
 
-#load data
-# load bson file
+# from transformers import MT5Model, AutoTokenizer
 
-data = bson.decode_file_iter(open('/scratch/zceemsi/Datasets/dump/sefaria/dafyomi.bson', 'rb'))
+# model = MT5Model.from_pretrained("google/mt5-small")
+# tokenizer = AutoTokenizer.from_pretrained("google/mt5-small")
+# article = "UN Offizier sagt, dass weiter verhandelt werden muss in Syrien."
+# summary = "Weiter Verhandlung in Syrien."
+# inputs = tokenizer(article, return_tensors="pt")
+# labels = tokenizer(text_target=summary, return_tensors="pt")
 
-# convert bson to pandas dataframe
+# outputs = model(input_ids=inputs["input_ids"], decoder_input_ids=labels["input_ids"])
 
-df = pd.DataFrame(data)
+# hidden_states = outputs.last_hidden_state
+# print(hidden_states)
 
-print(df.head())
+from transformers import MT5ForConditionalGeneration, AutoTokenizer
 
-print(df.loc[0]['displayValue'])
+# Load the model and tokenizer
+model = MT5ForConditionalGeneration.from_pretrained("google/mt5-small")
+tokenizer = AutoTokenizer.from_pretrained("google/mt5-small")
 
-#df = pd.read_json('/scratch/zceemsi/Datasets/dump/sefaria/dafyomi.metadata.json')
+# Define your text and target language
+article = "UN Offizier sagt, dass weiter verhandelt werden muss in Syrien."
+target_language = "en"
 
-#print(df.head())
+# Encode the text with the target language prefix
+inputs = tokenizer("translate German to English: " + article, return_tensors="pt")
 
+# Generate the translation
+translated_tokens = model.generate(**inputs)
+
+# Decode the translated tokens
+translation = tokenizer.decode(translated_tokens[0], skip_special_tokens=True)
+print(translation)
