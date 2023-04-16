@@ -1,27 +1,20 @@
-import pandas as pd
-import tarfile
-import bson
+from transformers import MarianMTModel, MarianTokenizer
 
-# tar = tarfile.open("/scratch/zceemsi/Datasets/dump_small.tar.gz", "r:gz")
+src_text = [
+    "היא שכחה לכתוב לו.",
+    "אני רוצה לדעת מיד כשמשהו יקרה.",
+    "שמי שרה ואני גרה בלונדון"
 
-# tar.extractall('/scratch/zceemsi/Datasets/')
+]
 
-# tar.close()
+model_name = "Helsinki-NLP/opus-mt-tc-big-he-en"
+tokenizer = MarianTokenizer.from_pretrained(model_name)
+model = MarianMTModel.from_pretrained(model_name)
+translated = model.generate(**tokenizer(src_text, return_tensors="pt", padding=True))
 
-#load data
-# load bson file
+for t in translated:
+    print( tokenizer.decode(t, skip_special_tokens=True) )
 
-data = bson.decode_file_iter(open('/scratch/zceemsi/Datasets/dump/sefaria/dafyomi.bson', 'rb'))
-
-# convert bson to pandas dataframe
-
-df = pd.DataFrame(data)
-
-print(df.head())
-
-print(df.loc[0]['displayValue'])
-
-#df = pd.read_json('/scratch/zceemsi/Datasets/dump/sefaria/dafyomi.metadata.json')
-
-#print(df.head())
-
+# expected output:
+#     She forgot to write to him.
+#     I want to know as soon as something happens.
