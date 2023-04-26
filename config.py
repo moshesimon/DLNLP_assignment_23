@@ -1,7 +1,10 @@
 import os
 
-sefaria_dir = '/scratch/zceemsi/Sefaria-Export'
+base_dir = os.path.dirname(os.path.abspath(__file__))
 
-json_dir = os.path.join(sefaria_dir, 'json')
-bk_en_dir = '/scratch/zceemsi/DLNLP_assignment_23/Datasets/Sefaria-Export/json/Talmud/Bavli/Seder Nezikin/Bava Kamma/English/merged.json'
-bk_he_dir = '/scratch/zceemsi/DLNLP_assignment_23/Datasets/Sefaria-Export/json/Talmud/Bavli/Seder Nezikin/Bava Kamma/Hebrew/merged.json'
+datasets_path = os.path.join(base_dir, 'Datasets')
+figures_path = os.path.join(base_dir, 'Figures')
+book1_path = os.path.join(datasets_path, 'Mesilat Yesharim/')
+book2_path = os.path.join(datasets_path, 'Orchot Tzadikim/')
+
+model_name = "Helsinki-NLP/opus-mt-tc-big-he-en"
